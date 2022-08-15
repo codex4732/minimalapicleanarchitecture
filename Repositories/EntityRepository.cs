@@ -24,11 +24,10 @@ public class EntityRepository : IEntityRepository
         var entities = (await _context.Entities.Where(x => x.Status != "D")
             .Join(_context.Countries, entity => entity.CountryId, country => country.Id,
                     (entity, country) => new {entity, country})
-            .Select(x => new {x.entity.FirstName, x.entity.LastName, x.entity.Address1, x.entity.Email, x.country.Name})
-            .ToListAsync());
+            .Select(x => new {x.entity.FirstName, x.entity.LastName, x.entity.Address1, x.entity.Email,
+                CountryName = x.country.Name, x.entity.Phone})
+            .ToListAsync()).Adapt<List<EntityDto>>();
         
-           
-            var data = entities.Adapt<List<EntityDto>>();
-        return data;
+        return entities;
     }
 }
