@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
-builder.Services.AddDbContext<EntityContext>( options => options.UseSqlServer(builder.Configuration.GetSection("EntityDbConnection").Value));
+builder.Services.AddDbContext<EntityContext>(options => options.UseInMemoryDatabase("EntityDb"));
 builder.AddInfrastructureServices();
 builder.AddApplicationServices();
 
