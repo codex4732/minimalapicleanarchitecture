@@ -1,15 +1,14 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.InMemory.Storage.Internal;
 using minimalapicleanarchitecture.Data;
 using minimalapicleanarchitecture.Endpoints;
 using minimalapicleanarchitecture.ServiceConfigurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddEntityFrameworkInMemoryDatabase();
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddDbContext<EntityContext>( options => options.UseSqlServer(builder.Configuration.GetSection("EntityDbConnection").Value));
 builder.AddInfrastructureServices();
 builder.AddApplicationServices();
@@ -27,7 +26,5 @@ if (app.Environment.IsDevelopment())
 app.MapEntityEndpoint();
 
 app.UseHttpsRedirection();
-
-
 
 app.Run();

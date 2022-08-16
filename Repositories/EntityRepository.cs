@@ -19,15 +19,29 @@ public class EntityRepository : IEntityRepository
         _context = context;
     }
 
-    public async Task<List<EntityDto>> GetAllEntities()
+    public async Task<List<EntityDto>> GetAllEntities() => (await _context.Entities.Where(x => x.Status != "D")
+        .Join(_context.Countries, entity => entity.CountryId, country => country.Id,
+                (entity, country) => new { entity, country })
+        .Select(x => new
+        {
+            x.entity.Id,
+            x.entity.FirstName,
+            x.entity.LastName,
+            x.entity.Address1,
+            x.entity.Email,
+            CountryName = x.country.Name,
+            x.entity.Phone
+        })
+        .ToListAsync()).Adapt<List<EntityDto>>();
+
+    public async Task<EntityDto> GetEntityById(int id) => (await _context.Entities.Where(x => x.Status != "D" && x.Id == id).Join(_context.Countries, entity => entity.CountryId, country => country.Id, (entity, country) => new { entity, country }).Select(x => new
     {
-        var entities = (await _context.Entities.Where(x => x.Status != "D")
-            .Join(_context.Countries, entity => entity.CountryId, country => country.Id,
-                    (entity, country) => new {entity, country})
-            .Select(x => new {x.entity.FirstName, x.entity.LastName, x.entity.Address1, x.entity.Email,
-                CountryName = x.country.Name, x.entity.Phone})
-            .ToListAsync()).Adapt<List<EntityDto>>();
-        
-        return entities;
-    }
+        x.entity.Id,
+        x.entity.FirstName,
+        x.entity.LastName,
+        x.entity.Address1,
+        x.entity.Email,
+        CountryName = x.country.Name,
+        x.entity.Phone
+    }).FirstOrDefaultAsync()).Adapt<EntityDto>();
 }
