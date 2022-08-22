@@ -1,10 +1,8 @@
 // add error handling middleware
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
 
-namespace Middleware
+using Microsoft.AspNetCore.Mvc;
+
+namespace minimalapicleanarchitecture.Middleware
 {
     public class ErrorHandlingMiddleware
     {
@@ -28,7 +26,7 @@ namespace Middleware
         {
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-            return context.Response.WriteAsync(text: new ProblemDetails() { Title = "An error occurred while processing your request.", Detail = exception.Message }.ToString());
+            return context.Response.WriteAsync(text: new ProblemDetails { Title = "An error occurred while processing your request.", Detail = exception.Message }.ToString()!);
         }
     }
 }
