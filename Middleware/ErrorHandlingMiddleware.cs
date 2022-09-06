@@ -32,7 +32,7 @@ namespace minimalapicleanarchitecture.Middleware
             {
                 ApplicationException => (int)HttpStatusCode.BadRequest,// custom application error
                 KeyNotFoundException  => (int)HttpStatusCode.NotFound,// not found error
-                _ => (int)HttpStatusCode.InternalServerError,// unhandled error
+                _ => (int)HttpStatusCode.InternalServerError// unhandled error
             };
             var result = JsonSerializer.Serialize(new { message = exception?.Message });
             await response.WriteAsync(result);
