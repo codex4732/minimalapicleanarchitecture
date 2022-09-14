@@ -8,16 +8,16 @@ public class EntityContext : DbContext
 {
     public DbSet<Country>? Countries { get; set; }
     public DbSet<Entity>? Entities { get; set; }
-    
+
     public EntityContext(DbContextOptions<EntityContext> options) : base(options)
     {
     }
 
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
+
     {
         base.OnModelCreating(modelBuilder);
-        
+
         var EntityIds = 1;
         var entityData = new Faker<Entity>()
             .RuleFor(m => m.Id, f => EntityIds++)
@@ -39,14 +39,11 @@ public class EntityContext : DbContext
             .RuleFor(m => m.Status, f => f.Random.String2(1, "I"))
             .RuleFor(m => m.DtAccess, f => f.Date.Past())
             .RuleFor(m => m.UserId, f => f.Random.Int(1, 20));
-            
-        
+
         // Generate fake data for entity table
         modelBuilder.Entity<Entity>().HasData(entityData.Generate(100));
-        
+
         // Generate fake data for country table
         modelBuilder.Entity<Country>().HasData(countryData.Generate(100));
-        
-        
     }
 }
